@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg bg-light navbar-light">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'App_Shop:home' %}">Django E-commerce Project</a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav ml-auto">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fa fa-shopping-cart"></i> Cart
+          </a>
+        </li>
+        <li class="nav-item">
+
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-tie"></i> {{request.user.profile.username}}</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'App_Login:profile' %}">Profile</a>
+            <a class="dropdown-item">Orders</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'App_Login:logout' %}">Logout</a>
+          </div>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a href="{% url 'App_Login:login' %}" class="btn btn-primary">Login</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
