@@ -20,12 +20,12 @@
         <th scope="row">{{ forloop.counter }}</th>
         <td>{{cart.item.name}}</td>
         <td>
-          <a class="mr-2" href="#"><span class="badge badge-light"><i class="fas fa-minus"></i></span></a>
+          <a class="mr-2" href="{% url 'App_Order:decrease' pk=cart.item.pk %}"><span class="badge badge-light"><i class="fas fa-minus"></i></span></a>
           {{ cart.quantity }}
-          <a class="mr-2" href="#"><span class="badge badge-light"><i class="fas fa-plus"></i></span></a>
+          <a class="mr-2" href="{% url 'App_Order:increase' pk=cart.item.pk %}"><span class="badge badge-light"><i class="fas fa-plus"></i></span></a>
         </td>
         <td align="right">&#2547; {{cart.get_total}}</td>
-        <td><a href="#" class="btn btn-danger btn-sm">Remove From Cart</a></td>
+        <td><a href="{% url 'App_Order:remove' pk=cart.item.pk %}" class="btn btn-danger btn-sm">Remove From Cart</a></td>
       </tr>
       {% endfor %}
       <tr>
