@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse
 from django.contrib import messages
 # models and forms
-from App_Order.models import Order
+from App_Order.models import Order, Cart
 from App_Payment.forms import BillingAddress
 from App_Payment.forms import BillingForm
 
@@ -84,12 +84,30 @@ def complete(request):
     if request.method == 'POST' or request.method == 'post':
         payment_data = request.POST
         status = payment_data['status']
-        val_id = payment_data['val_id']
-        tran_id = payment_data['tran_id']
-        bank_tran_id = payment_data['bank_tran_id']
 
         if status == 'VALID':
-            messages.success(request, f"Your Payment Completed Successfully!")
+            val_id = payment_data['val_id']
+            tran_id = payment_data['tran_id']
+            messages.success(
+                request, f"Your Payment Completed Successfully! Page will be redirected.")
+            return HttpResponseRedirect(reverse("App_Payment:purchase", kwargs={'val_id': val_id, 'tran_id': tran_id}))
         elif status == 'FAILED':
-            messages.warning(request, f"Your Payment Failed! Please Try Again.")
+            messages.warning(
+                request, f"Your Payment Failed! Please Try Again. Page will be redirected.")
     return render(request, "App_Payment/complete.html", context={})
+
+
+@login_required
+def purchase(request, val_id, tran_id):
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    order = order_qs[0]
+    orderId = tran_id
+    order.ordered = True
+    order.orderId = orderId
+    order.paymentId = val_id
+    order.save()
+    cart_items = Cart.objects.filter(user=request.user, purchased=False)
+    for item in cart_items:
+        item.purchased = True
+        item.save()
+    return HttpResponseRedirect(reverse("App_Shop:home"))
